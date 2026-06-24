@@ -48,18 +48,24 @@ start() {
 }
 
 stop() {
+  # 1) 우리 PID와 그 자식만 정확히 정리. 다른 프로젝트의 next 프로세스는 절대 건드리지 않음.
   if [[ -f "$PIDFILE" ]]; then
     local pid; pid="$(cat "$PIDFILE")"
     if kill -0 "$pid" 2>/dev/null; then
+      pkill -P "$pid" 2>/dev/null || true   # 우리 PID의 직접 자식만
       kill "$pid" 2>/dev/null || true
       sleep 1
       kill -9 "$pid" 2>/dev/null || true
     fi
     rm -f "$PIDFILE"
   fi
-  # next-server 자식 프로세스까지 청소
-  pkill -f "next-server" 2>/dev/null || true
-  echo "정지됨."
+  # 2) 우리 포트에 남은 잔여 프로세스만 정리 (다른 포트엔 영향 0).
+  local pids
+  pids="$(lsof -ti tcp:"$PORT" 2>/dev/null || true)"
+  if [[ -n "$pids" ]]; then
+    echo "$pids" | xargs -I{} sh -c "kill {} 2>/dev/null || true"
+  fi
+  echo "정지됨. (포트 $PORT 만)"
 }
 
 status() {
