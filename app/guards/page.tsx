@@ -10,7 +10,7 @@ interface Threshold {
   id: string;
   law: string;
   severity: "block" | "warn";
-  kind: string;
+  kind: "max_annual_rate" | "min_ctr_threshold_krw" | "forbidden_pattern" | "policy" | "convention";
   limit_percent?: number;
   limit_value?: number;
   pattern?: string;
@@ -164,22 +164,59 @@ export default function GuardsPage() {
               </div>
             )}
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {t.limit_percent !== undefined && (
+              <Field label="법령 / 근거">
+                <Input
+                  value={t.law}
+                  onChange={(e) => updateThreshold(idx, { law: e.target.value })}
+                />
+              </Field>
+              <Field label="종류 (kind)">
+                <select
+                  value={t.kind}
+                  onChange={(e) =>
+                    updateThreshold(idx, { kind: e.target.value as Threshold["kind"] })
+                  }
+                  className="w-full rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm"
+                >
+                  <option value="max_annual_rate">최대 연이율(%)</option>
+                  <option value="min_ctr_threshold_krw">최소 임계값 (원)</option>
+                  <option value="forbidden_pattern">금지 패턴 (정규식)</option>
+                  <option value="policy">정책</option>
+                  <option value="convention">컨벤션</option>
+                </select>
+              </Field>
+              {(t.kind === "max_annual_rate" || t.limit_percent !== undefined) && (
                 <Field label="연 이율 상한 (%)">
                   <Input
                     type="number"
                     step="0.1"
-                    value={t.limit_percent}
-                    onChange={(e) => updateThreshold(idx, { limit_percent: Number(e.target.value) })}
+                    value={t.limit_percent ?? ""}
+                    onChange={(e) =>
+                      updateThreshold(idx, {
+                        limit_percent: e.target.value === "" ? undefined : Number(e.target.value),
+                      })
+                    }
                   />
                 </Field>
               )}
-              {t.limit_value !== undefined && (
-                <Field label="임계값">
+              {(t.kind === "min_ctr_threshold_krw" || t.limit_value !== undefined) && (
+                <Field label="임계값 (원)">
                   <Input
                     type="number"
-                    value={t.limit_value}
-                    onChange={(e) => updateThreshold(idx, { limit_value: Number(e.target.value) })}
+                    value={t.limit_value ?? ""}
+                    onChange={(e) =>
+                      updateThreshold(idx, {
+                        limit_value: e.target.value === "" ? undefined : Number(e.target.value),
+                      })
+                    }
+                  />
+                </Field>
+              )}
+              {(t.kind === "forbidden_pattern" || t.pattern !== undefined) && (
+                <Field label="정규식 패턴">
+                  <Input
+                    value={t.pattern ?? ""}
+                    onChange={(e) => updateThreshold(idx, { pattern: e.target.value })}
                   />
                 </Field>
               )}
@@ -202,11 +239,13 @@ export default function GuardsPage() {
                 />
               </Field>
             </div>
-            {t.applies_to_keywords && t.applies_to_keywords.length > 0 && (
-              <div className="mt-3 text-xs text-neutral-500">
-                매칭 키워드: {t.applies_to_keywords.join(" · ")}
-              </div>
-            )}
+            <div className="mt-3">
+              <KeywordChips
+                label="매칭 키워드"
+                items={t.applies_to_keywords ?? []}
+                onChange={(items) => updateThreshold(idx, { applies_to_keywords: items })}
+              />
+            </div>
           </Card>
         ))}
 
@@ -256,6 +295,65 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="mb-1 block text-xs text-neutral-500">{label}</span>
       {children}
     </label>
+  );
+}
+
+function KeywordChips({
+  label,
+  items,
+  onChange,
+}: {
+  label: string;
+  items: string[];
+  onChange: (next: string[]) => void;
+}) {
+  const [input, setInput] = useState("");
+  return (
+    <div>
+      <div className="mb-1 text-xs text-neutral-500">{label}</div>
+      <div className="flex flex-wrap gap-1.5">
+        {items.map((it, idx) => (
+          <span
+            key={`${it}-${idx}`}
+            className="inline-flex items-center gap-1 rounded-md border border-neutral-700 bg-neutral-900 px-2 py-1 text-xs text-neutral-200"
+          >
+            {it}
+            <button
+              type="button"
+              className="text-neutral-500 hover:text-red-400"
+              onClick={() => onChange(items.filter((_, i) => i !== idx))}
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+      <div className="mt-2 flex gap-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="새 키워드 Enter (한국어 OK)"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && input.trim()) {
+              onChange([...items, input.trim()]);
+              setInput("");
+              e.preventDefault();
+            }
+          }}
+        />
+        <Button
+          variant="secondary"
+          onClick={() => {
+            if (input.trim()) {
+              onChange([...items, input.trim()]);
+              setInput("");
+            }
+          }}
+        >
+          추가
+        </Button>
+      </div>
+    </div>
   );
 }
 
