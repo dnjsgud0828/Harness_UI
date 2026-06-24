@@ -139,12 +139,15 @@ GET /api/health
 → { ok, triage_script_present, guard_script_present, node, closed_network_mode }
 ```
 
-## 관련 문서 (`/Users/aa/Documents/` 경로)
+## 관련 문서 (`docs/` 폴더)
 
-- `Harness_Implementation_Plan.md` — 모태 (Harness B)
-- `Harness_Agent_Models_And_Flow.md` — 에이전트 세션·통신·모델
-- `Harness_Hybrid_Routing_Plan.md` — 3층 라우팅
-- `Harness_Triage_Ontology_Roadmap.md` — 온톨로지 진화
-- `Harness_UI_Tool_Plan.md` — Studio 초기 계획
-- `Harness_CLI_Slash_Commands_Plan.md` — `/harness` 슬래시
-- `Harness_Roadmap_Now_vs_Future.md` — 전체 로드맵 (지금/다음/추후)
+[docs/README.md](docs/README.md) 에 인덱스가 있습니다.
+
+- [Harness_UI_Tool_Plan.md](docs/Harness_UI_Tool_Plan.md) — Studio 초기 계획·UX 원칙
+- [Harness_Agent_Models_And_Flow.md](docs/Harness_Agent_Models_And_Flow.md) — 에이전트 세션·통신·시퀀스 다이어그램
+- [Harness_Hybrid_Routing_Plan.md](docs/Harness_Hybrid_Routing_Plan.md) — 3층 라우팅 설계
+- [Harness_Triage_Ontology_Roadmap.md](docs/Harness_Triage_Ontology_Roadmap.md) — 온톨로지 진화 (YAML → 그래프DB)
+- [Harness_CLI_Slash_Commands_Plan.md](docs/Harness_CLI_Slash_Commands_Plan.md) — `/harness` 슬래시 명령
+- [Harness_Roadmap_Now_vs_Future.md](docs/Harness_Roadmap_Now_vs_Future.md) — 전체 로드맵 (지금/다음/추후)
+
+> 외부 모태 문서: `Documents/Harness_Implementation_Plan.md` (Harness B 원본) — 이 프로젝트 외부에 보존.

@@ -8,9 +8,13 @@ import { Badge } from "@/components/ui/badge";
 export default function ModelsPage() {
   const [endpoint, setEndpoint] = useState("http://localhost:11434/v1/embeddings");
   const [model, setModel] = useState("qwen3-embedding:8b");
-  const [status, setStatus] = useState<null | { ok: boolean; latencyMs?: number; error?: string }>(
-    null,
-  );
+  const [status, setStatus] = useState<null | {
+    ok: boolean;
+    latencyMs?: number;
+    error?: string;
+    hint?: string;
+    dim?: number | null;
+  }>(null);
   const [testing, setTesting] = useState(false);
 
   async function test() {
@@ -50,15 +54,22 @@ export default function ModelsPage() {
             <div className="mb-1 text-xs text-neutral-500">모델</div>
             <Input value={model} onChange={(e) => setModel(e.target.value)} />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button onClick={test} disabled={testing}>
-              {testing ? "테스트 중…" : "연결 테스트"}
+              {testing ? "테스트 중… (cold start이면 30~60초)" : "연결 테스트"}
             </Button>
             {status && status.ok && (
-              <Badge tone="ok">연결 성공 · {status.latencyMs} ms</Badge>
+              <Badge tone="ok">
+                연결 성공 · {status.latencyMs} ms{status.dim ? ` · ${status.dim} 차원` : ""}
+              </Badge>
             )}
             {status && !status.ok && <Badge tone="danger">실패 · {status.error}</Badge>}
           </div>
+          {status && status.hint && (
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-300">
+              💡 {status.hint}
+            </div>
+          )}
           <div className="mt-2 text-xs text-neutral-500">
             ℹ️ 미설정 시 라우팅은 L1 규칙만으로 동작합니다 (graceful skip).
           </div>
