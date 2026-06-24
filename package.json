@@ -4,6 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:bg": "./scripts/dev.sh start",
+    "dev:stop": "./scripts/dev.sh stop",
+    "dev:restart": "./scripts/dev.sh restart",
+    "dev:status": "./scripts/dev.sh status",
+    "dev:logs": "./scripts/dev.sh logs",
+    "dev:watch": "./scripts/dev.sh watch",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

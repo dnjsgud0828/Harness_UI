@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+launchd 자동 시작 템플릿. 사용 절차:
+  1) 이 파일을 ~/Library/LaunchAgents/com.harness-ui.dev.plist 로 복사
+  2) {{PROJECT_PATH}} 를 절대경로로 치환 (예: /Users/aa/Documents/20_project/24_practice/harness-ui)
+  3) launchctl load -w ~/Library/LaunchAgents/com.harness-ui.dev.plist
+  4) 다음 로그인부터 dev 서버 자동 시작
+  해제: launchctl unload ~/Library/LaunchAgents/com.harness-ui.dev.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.harness-ui.dev</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>cd {{PROJECT_PATH}} &amp;&amp; ./scripts/dev.sh start</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>{{PROJECT_PATH}}/.dev.launchd.out</string>
+
+  <key>StandardErrorPath</key>
+  <string>{{PROJECT_PATH}}/.dev.launchd.err</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>NEXT_TELEMETRY_DISABLED</key>
+    <string>1</string>
+  </dict>
+</dict>
+</plist>

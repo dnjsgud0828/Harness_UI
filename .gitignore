@@ -7,3 +7,7 @@ out
 .DS_Store
 tsconfig.tsbuildinfo
 .harness-backups/
+.dev.pid
+.dev.log
+.dev.launchd.out
+.dev.launchd.err

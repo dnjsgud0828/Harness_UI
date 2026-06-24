@@ -37,12 +37,40 @@
 
 ## 로컬 개발
 
+### 빠른 시작 (foreground)
+
 ```bash
 cd ~/Documents/20_project/24_practice/harness-ui
 npm install
 npm run dev
 # → http://localhost:3000
 ```
+
+> **HMR(Hot Module Replacement) 내장** — 한 번 실행하면 코드 저장만으로 브라우저가 자동 갱신됩니다. 다시 `npm run dev` 칠 필요 없음.
+
+### 항상 켜두기 (background)
+
+매번 `npm run dev` 치는 게 번거로우면 백그라운드 모드 사용:
+
+```bash
+npm run dev:bg       # 백그라운드 시작 (이미 켜져 있으면 무시)
+npm run dev:status   # 상태 확인 (pid, 포트, 최근 로그)
+npm run dev:logs     # 실시간 로그 (Ctrl+C로 빠짐)
+npm run dev:stop     # 종료
+npm run dev:restart  # 재시작
+npm run dev:watch    # 크래시 시 자동 재시작 감시 (foreground, Ctrl+C 종료)
+```
+
+PID는 `.dev.pid`, 로그는 `.dev.log` (모두 `.gitignore`).
+
+### macOS 로그인 시 자동 시작
+
+```bash
+./scripts/install-autostart.sh install     # 등록 + 즉시 시작
+./scripts/install-autostart.sh uninstall   # 해제
+```
+
+`~/Library/LaunchAgents/com.harness-ui.dev.plist` 가 생성됩니다. KeepAlive 설정으로 크래시 시 자동 재시작.
 
 환경변수 (선택):
 - `HARNESS_SKILLS_DIR` — 스킬 디렉터리 (기본 `~/.claude/skills`)
