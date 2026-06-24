@@ -1,0 +1,17 @@
+services:
+  harness-ui:
+    build: .
+    image: harness-ui:0.1.0
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+      # 사내 vLLM 엔드포인트로 교체
+      - FIN_EMBED_ENDPOINT=${FIN_EMBED_ENDPOINT:-http://host.docker.internal:11434/v1/embeddings}
+      - FIN_EMBED_MODEL=${FIN_EMBED_MODEL:-qwen3-embedding:8b}
+      - FIN_EMBED_VERSION=${FIN_EMBED_VERSION:-qwen3-embedding-8b-q4}
+      - HARNESS_SKILLS_DIR=/opt/harness-config
+    volumes:
+      # 호스트의 ~/.claude/skills 트리를 컨테이너 안 /opt/harness-config로 마운트
+      - ${HOME}/.claude/skills:/opt/harness-config:rw
+    restart: unless-stopped

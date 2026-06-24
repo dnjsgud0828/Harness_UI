@@ -1,0 +1,22 @@
+{
+  "domain": "insurance",
+  "orchestrator": "harness-orchestrator",
+  "pack": { "agents": ["ins-regulatory"], "skills": ["insurance-domain-rules"] },
+  "force_full": {
+    "paths": [
+      "insurance/", "policy/", "claim/", "underwriting/", "surrender/",
+      "premium/", "policyholder/", "endorsement/"
+    ],
+    "keywords": [
+      "보험료", "premium", "청약", "언더라이팅", "underwriting", "인수심사",
+      "청구", "claim", "보험금", "지급심사", "해지환급금", "surrender",
+      "표준약관", "특약", "보험계약", "policy", "고지의무", "부활", "갱신",
+      "보험계약대출", "약관대출"
+    ]
+  },
+  "domain_signal": {
+    "paths": ["ins/", "underwrite/"],
+    "keywords": ["계약자", "피보험자", "수익자", "보장", "담보", "보험상품"]
+  },
+  "weights": { "path": 3, "keyword": 1 }
+}

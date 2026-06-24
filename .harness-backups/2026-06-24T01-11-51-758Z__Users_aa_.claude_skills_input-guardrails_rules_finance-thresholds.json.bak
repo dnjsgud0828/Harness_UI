@@ -1,0 +1,121 @@
+{
+  "domain": "finance",
+  "version": "1.0",
+  "updated": "2026-06-23",
+  "thresholds": [
+    {
+      "id": "iza_jehan_act_max_rate",
+      "law": "이자제한법 §2 / 대부업법 시행령 §5",
+      "severity": "block",
+      "kind": "max_annual_rate",
+      "limit_percent": 20.5,
+      "applies_to_keywords": [
+        "이자",
+        "연체",
+        "연체이율",
+        "연체수수료",
+        "지연배상",
+        "late fee",
+        "overdue",
+        "interest rate",
+        "이율"
+      ],
+      "message_ko": "이자제한법 상 연체이율 상한(연 20%)을 초과합니다. 적용 근거를 확인하세요."
+    },
+    {
+      "id": "consumer_loan_max_rate",
+      "law": "이자제한법 §2 (소비자대출 한정)",
+      "severity": "warn",
+      "kind": "max_annual_rate",
+      "limit_percent": 20,
+      "applies_to_keywords": [
+        "소비자대출",
+        "신용대출",
+        "개인대출"
+      ],
+      "message_ko": "소비자대출 적용이율이 법정 상한에 근접/초과합니다. 상품 약관 확인이 필요합니다."
+    },
+    {
+      "id": "ctr_threshold_krw",
+      "law": "특정금융정보법 시행령 §8.2 (KoFIU)",
+      "severity": "warn",
+      "kind": "min_ctr_threshold_krw",
+      "limit_value": 10000000,
+      "applies_to_keywords": [
+        "CTR",
+        "고액현금거래",
+        "현금거래보고"
+      ],
+      "message_ko": "고액현금거래 보고 기준(1천만원) 이하로 임계값이 설정되어 있습니다. 의도 확인 필요."
+    },
+    {
+      "id": "txn_record_retention_years",
+      "law": "전자금융거래법 §22 / 시행령 §12",
+      "severity": "warn",
+      "kind": "min_retention_years",
+      "limit_value": 5,
+      "applies_to_keywords": [
+        "거래기록",
+        "보존",
+        "retention",
+        "audit",
+        "감사로그"
+      ],
+      "message_ko": "전자금융 거래기록 5년 보존 의무가 적용될 수 있습니다. 보존기간 설정을 확인하세요."
+    },
+    {
+      "id": "credit_info_retention_max_years",
+      "law": "신용정보법 §20.2",
+      "severity": "warn",
+      "kind": "max_retention_years",
+      "limit_value": 5,
+      "applies_to_keywords": [
+        "신용정보",
+        "개인신용정보",
+        "credit info"
+      ],
+      "message_ko": "개인신용정보 보존기간이 상거래 종료 후 5년을 초과합니다. 신용정보법 위반 가능."
+    },
+    {
+      "id": "float_double_money_pattern",
+      "law": "finance-domain-rules / 정밀 십진 연산",
+      "severity": "block",
+      "kind": "forbidden_pattern",
+      "pattern": "\\b(float|double)\\s+(amount|principal|interest|fee|balance|money)",
+      "applies_to_keywords": [
+        "금액",
+        "이자",
+        "잔액",
+        "정산",
+        "환율"
+      ],
+      "message_ko": "금액 변수에 float/double 사용 금지. BigDecimal 사용 필수 (정밀도 손실 위험)."
+    },
+    {
+      "id": "negative_balance_forbidden",
+      "law": "finance-domain-rules / 여수신 잔액 음수 금지",
+      "severity": "warn",
+      "kind": "policy",
+      "applies_to_keywords": [
+        "출금",
+        "차감",
+        "withdraw",
+        "debit"
+      ],
+      "message_ko": "잔액 음수 가능 로직이 감지됩니다. 한도 검증·트랜잭션 경계를 확인하세요."
+    },
+    {
+      "id": "day_count_act_360_vs_365",
+      "law": "finance-domain-rules / 일수계산 컨벤션",
+      "severity": "warn",
+      "kind": "convention",
+      "applies_to_keywords": [
+        "ACT/360",
+        "ACT/365",
+        "30/360",
+        "일수계산"
+      ],
+      "message_ko": "일수계산 컨벤션이 명시되어 있습니다. 상품 약관과 일치하는지 확인하세요."
+    }
+  ]
+}
